@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h1>Login</h1>
+
+  <form id="loginForm">
+    <label>Usuário:</label>
+    <input type="text" id="username" required>
+
+    <label>Senha:</label>
+    <input type="password" id="password" required>
+
+    <button type="submit">Entrar</button>
+   
+    <p id="result"></p>
+  </form>
+
+ 
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          result.textContent = data.error;
+          result.className = 'error';
+        } else {
+          result.textContent = data.message;
+          result.className = 'success';
+        }
+
+      } catch (error) {
+        result.textContent = 'Erro ao conectar com o servidor';
+        result.className = 'error';
+      }
+    });
+  </script>
+
+</body>
+</html>
